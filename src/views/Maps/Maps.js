@@ -1,12 +1,24 @@
 import React from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import { useState, useEffect } from 'react';
 
 const CustomSkinMap = withScriptjs(
 	withGoogleMap(() => {
+		const [LatLng, setLatLng] = useState({ lat: 37.5305195, lng: 126.9634576 });
+		useEffect(() => {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(position => {
+					setLatLng({
+						lat: position.coords.latitude,
+						lng: position.coords.longitude,
+					});
+				});
+			}
+		}, []);
 		return (
 			<GoogleMap
-				defaultZoom={18}
-				defaultCenter={{ lat: 37.5846557, lng: 127.02928809999999 }}
+				defaultZoom={15}
+				center={LatLng}
 				defaultOptions={{
 					scrollwheel: false,
 					zoomControl: true,
