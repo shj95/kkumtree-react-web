@@ -1,21 +1,36 @@
 import React from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import { useState, useEffect } from 'react';
+import { SyncLoader } from 'halogenium';
 
 const CustomSkinMap = withScriptjs(
 	withGoogleMap(() => {
 		const [LatLng, setLatLng] = useState({ lat: 37.5305195, lng: 126.9634576 });
+		const [isLoading, setIsLoading] = useState(true);
 		useEffect(() => {
+			setIsLoading(true);
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(position => {
 					setLatLng({
 						lat: position.coords.latitude,
 						lng: position.coords.longitude,
 					});
+					setTimeout(() => {
+						setIsLoading(false);
+					}, 1000);
 				});
 			}
 		}, []);
-		return (
+		return isLoading ? (
+			<div>
+				<SyncLoader
+					loading={isLoading}
+					size="30px"
+					color="#123abc"
+					style={{ position: 'absolute', top: '50%', left: '50%' }}
+				/>
+			</div>
+		) : (
 			<GoogleMap
 				defaultZoom={15}
 				center={LatLng}
@@ -76,7 +91,7 @@ const CustomSkinMap = withScriptjs(
 					],
 				}}
 			>
-				<Marker position={{ lat: 40.748817, lng: -73.985428 }} />
+				<Marker position={LatLng} />
 			</GoogleMap>
 		);
 	}),
