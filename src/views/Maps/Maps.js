@@ -25,9 +25,9 @@ const CustomSkinMap = withScriptjs(
 			<div>
 				<SyncLoader
 					loading={isLoading}
-					size="30px"
-					color="#123abc"
-					style={{ position: 'absolute', top: '50%', left: '50%' }}
+					size="20px"
+					color="#36D7B7"
+					style={{ position: 'absolute', top: '50%', left: 'calc(50% - 30px)' }}
 				/>
 			</div>
 		) : (
@@ -102,7 +102,7 @@ export default function Maps() {
 		<CustomSkinMap
 			googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBVhZH8Q5rxjZKnGAQKvrkm3Kb18xuKkI"
 			loadingElement={<div style={{ height: `100%` }} />}
-			containerElement={<div style={{ height: `100vh` }} />}
+			containerElement={<div style={{ height: `calc(100vh - 70px)` }} />}
 			mapElement={<div style={{ height: `100%` }} />}
 		/>
 	);

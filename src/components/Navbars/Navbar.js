@@ -22,7 +22,7 @@ export default function Header(props) {
 	const classes = useStyles();
 	function makeBrand() {
 		var name;
-		props.routes.map((prop) => {
+		props.routes.map(prop => {
 			if (window.location.href.indexOf(prop.layout + prop.path) !== -1) {
 				name = props.rtlActive ? prop.rtlName : prop.name;
 			}
@@ -43,14 +43,6 @@ export default function Header(props) {
 						{makeBrand()}
 					</Button>
 				</div>
-				<Hidden smDown implementation="css">
-					{props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks />}
-				</Hidden>
-				<Hidden mdUp implementation="css">
-					<IconButton color="inherit" aria-label="open drawer" onClick={props.handleDrawerToggle}>
-						<Menu />
-					</IconButton>
-				</Hidden>
 			</Toolbar>
 		</AppBar>
 	);

@@ -79,7 +79,7 @@ const dashboardRoutes = [
 	},
 	{
 		path: '/maps',
-		name: 'Maps',
+		name: '꿈나무 카드 지도',
 		rtlName: 'خرائط',
 		icon: LocationOn,
 		component: Maps,

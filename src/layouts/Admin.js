@@ -44,10 +44,10 @@ export default function Admin({ ...rest }) {
 	const [color, setColor] = React.useState('blue');
 	const [fixedClasses, setFixedClasses] = React.useState('dropdown show');
 	const [mobileOpen, setMobileOpen] = React.useState(false);
-	const handleImageClick = (image) => {
+	const handleImageClick = image => {
 		setImage(image);
 	};
-	const handleColorClick = (color) => {
+	const handleColorClick = color => {
 		setColor(color);
 	};
 	const handleFixedClick = () => {
@@ -89,8 +89,8 @@ export default function Admin({ ...rest }) {
 	return (
 		<div className={classes.wrapper}>
 			<Sidebar
-				routes={routes}
-				logoText={'Creative Tim'}
+				routes={[]}
+				logoText={'KKUMTREE'}
 				logo={logo}
 				image={image}
 				handleDrawerToggle={handleDrawerToggle}
@@ -100,7 +100,6 @@ export default function Admin({ ...rest }) {
 			/>
 			<div className={classes.mainPanel} ref={mainPanel}>
 				<Navbar routes={routes} handleDrawerToggle={handleDrawerToggle} {...rest} />
-				{/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
 				{getRoute() ? (
 					<div className={classes.content}>
 						<div className={classes.container}>{switchRoutes}</div>
@@ -108,15 +107,6 @@ export default function Admin({ ...rest }) {
 				) : (
 					<div className={classes.map}>{switchRoutes}</div>
 				)}
-				{getRoute() ? <Footer /> : null}
-				<FixedPlugin
-					handleImageClick={handleImageClick}
-					handleColorClick={handleColorClick}
-					bgColor={color}
-					bgImage={image}
-					handleFixedClick={handleFixedClick}
-					fixedClasses={fixedClasses}
-				/>
 			</div>
 		</div>
 	);
