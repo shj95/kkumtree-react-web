@@ -29,8 +29,10 @@
 		"sweetalert": "^2.1.2"
 	},
 	"scripts": {
-		"start": "react-scripts start",
-		"build": "react-scripts build",
+		"start:local": "cp ./.env.local ./.env.development.local && react-scripts start",
+		"start:prod": "cp ./.env.prod ./.env.development.local && react-scripts start",
+		"build:local": "cp ./.env.local ./.env.development.local && react-scripts build",
+		"build:prod": "cp ./.env.prod ./.env.development.local && react-scripts build",
 		"test": "react-scripts test --env=jsdom",
 		"eject": "react-scripts eject",
 		"install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
