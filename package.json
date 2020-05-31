@@ -32,7 +32,7 @@
 		"start:local": "cp ./.env.local ./.env.development.local && react-scripts start",
 		"start:prod": "cp ./.env.prod ./.env.development.local && react-scripts start",
 		"build:local": "cp ./.env.local ./.env.development.local && react-scripts build",
-		"build:prod": "cp ./.env.prod ./.env.development.local && react-scripts build",
+		"build:prod": "cp ./.env.prod ./.env.development.local && react-scripts build && cp _redirects ./build/_redirects",
 		"test": "react-scripts test --env=jsdom",
 		"eject": "react-scripts eject",
 		"install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
@@ -51,7 +51,6 @@
 	"bugs": {
 		"url": "https://github.com/creativetimofficial/material-dashboard-react/issues"
 	},
-	"homepage": "https://creativetimofficial.github.io/material-dashboard-react/#/dashboard",
 	"optionalDependencies": {
 		"@types/googlemaps": "3.37.3",
 		"@types/markerclustererplus": "2.1.33",
