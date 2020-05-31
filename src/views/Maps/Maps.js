@@ -1,26 +1,59 @@
 import React from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { SyncLoader } from 'halogenium';
+import { connect } from 'react-redux';
+import { actionCreators } from '../../store/modules/store/actions';
+import swal from 'sweetalert';
 
 const CustomSkinMap = withScriptjs(
-	withGoogleMap(() => {
-		const [LatLng, setLatLng] = useState({ lat: 37.5305195, lng: 126.9634576 });
-		const [isLoading, setIsLoading] = useState(true);
+	withGoogleMap(({ props }) => {
+		const [LatLng, setLatLng] = useState({ lat: 37.5305195, lng: 126.9634576 }); // 기본 좌표 : 용산역
+		const [isLoading, setIsLoading] = useState(false);
+		const mapRef = useRef(null);
 		useEffect(() => {
 			setIsLoading(true);
 			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(position => {
-					setLatLng({
-						lat: position.coords.latitude,
-						lng: position.coords.longitude,
-					});
-					setTimeout(() => {
-						setIsLoading(false);
-					}, 1000);
-				});
+				navigator.geolocation.getCurrentPosition(
+					position => {
+						setLatLng({
+							lat: position.coords.latitude,
+							lng: position.coords.longitude,
+						});
+						console.log(props);
+						props.requestStoreMapList({
+							lat: position.coords.latitude,
+							lng: position.coords.longitude,
+						});
+						setTimeout(() => {
+							setIsLoading(false);
+						}, 500);
+					},
+					err => {
+						swal(
+							'현재 위치를 알 수 없습니다.',
+							'현재 위치를 받아오기 위하여, 위치 정보 이용 동의가 필요합니다. ',
+							'error',
+						);
+
+						setTimeout(() => {
+							setIsLoading(false);
+						}, 500);
+					},
+				);
 			}
 		}, []);
+
+		function handleLoad(map) {
+			mapRef.current = map;
+		}
+
+		function handleDragEnded() {
+			if (!mapRef.current) return;
+			const newPos = mapRef.current.getCenter().toJSON();
+			props.requestStoreMapList(newPos.lat, newPos.lng);
+		}
+
 		return isLoading ? (
 			<div>
 				<SyncLoader
@@ -32,8 +65,10 @@ const CustomSkinMap = withScriptjs(
 			</div>
 		) : (
 			<GoogleMap
+				ref={handleLoad}
 				defaultZoom={15}
 				center={LatLng}
+				onDragEnd={handleDragEnded}
 				defaultOptions={{
 					scrollwheel: false,
 					zoomControl: true,
@@ -97,13 +132,24 @@ const CustomSkinMap = withScriptjs(
 	}),
 );
 
-export default function Maps() {
+function Maps(props) {
 	return (
 		<CustomSkinMap
 			googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBVhZH8Q5rxjZKnGAQKvrkm3Kb18xuKkI"
 			loadingElement={<div style={{ height: `100%` }} />}
 			containerElement={<div style={{ height: `calc(100vh - 70px)` }} />}
 			mapElement={<div style={{ height: `100%` }} />}
+			props={props}
 		/>
 	);
 }
+
+export default connect(
+	state => ({
+		isLoading: state.store.isLoading,
+		storeMapList: state.store.storeMapList.data,
+	}),
+	{
+		requestStoreMapList: actionCreators.requestStoreMapList,
+	},
+)(Maps);
