@@ -57,10 +57,8 @@ const CustomSkinMap = withScriptjs(
 			if (!mapRef.current) return;
 			const newPos = mapRef.current.getCenter().toJSON();
 			props.requestStoreMapList({ lat: newPos.lat, lng: newPos.lng });
-			console.log(props);
 		}
 
-		console.log(props);
 		return isLoading ? (
 			<div>
 				<SyncLoader
