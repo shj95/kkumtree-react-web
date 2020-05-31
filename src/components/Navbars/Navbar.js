@@ -36,7 +36,7 @@ export default function Header(props) {
 	});
 	return (
 		<AppBar className={classes.appBar + appBarClasses}>
-			<Toolbar className={classes.container}>
+			<Toolbar className={classes.container} variant="dense" dense disableGutters>
 				<div className={classes.flex}>
 					{/* Here we create navbar brand, based on route name */}
 					<Button color="transparent" href="#" className={classes.title}>

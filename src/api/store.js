@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const axiosClient = axios.create();
 
-export async function getStoresByLatLng(lat, lng) {
+export async function getStoresByLatLng({ lat, lng }) {
 	return await axiosClient.get(`/stores/nearby?latitude=${lat}&longitude=${lng}`);
 }
 

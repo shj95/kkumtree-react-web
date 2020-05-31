@@ -1,9 +1,15 @@
+/* eslint-disable no-undef */
 import React from 'react';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import { withScriptjs, withGoogleMap, GoogleMap } from 'react-google-maps';
+import { MarkerWithLabel } from 'react-google-maps/lib/components/addons/MarkerWithLabel';
+import { MarkerClusterer } from 'react-google-maps/lib/components/addons/MarkerClusterer';
+
 import { useState, useEffect, useRef } from 'react';
 import { SyncLoader } from 'halogenium';
 import { connect } from 'react-redux';
 import { actionCreators } from '../../store/modules/store/actions';
+import chiken from 'assets/img/marker/chiken.png';
+import bread from 'assets/img/marker/bread.png';
 import swal from 'sweetalert';
 
 const CustomSkinMap = withScriptjs(
@@ -20,7 +26,6 @@ const CustomSkinMap = withScriptjs(
 							lat: position.coords.latitude,
 							lng: position.coords.longitude,
 						});
-						console.log(props);
 						props.requestStoreMapList({
 							lat: position.coords.latitude,
 							lng: position.coords.longitude,
@@ -51,9 +56,11 @@ const CustomSkinMap = withScriptjs(
 		function handleDragEnded() {
 			if (!mapRef.current) return;
 			const newPos = mapRef.current.getCenter().toJSON();
-			props.requestStoreMapList(newPos.lat, newPos.lng);
+			props.requestStoreMapList({ lat: newPos.lat, lng: newPos.lng });
+			console.log(props);
 		}
 
+		console.log(props);
 		return isLoading ? (
 			<div>
 				<SyncLoader
@@ -126,7 +133,34 @@ const CustomSkinMap = withScriptjs(
 					],
 				}}
 			>
-				<Marker position={LatLng} />
+				<MarkerClusterer averageCenter enableRetinaIcons gridSize={50}>
+					{props.storeMapList &&
+						props.storeMapList.map(v => {
+							return (
+								<MarkerWithLabel
+									key={v.id}
+									position={{ lat: v.latitude, lng: v.longitude }}
+									labelAnchor={new google.maps.Point(0, 0)}
+									labelStyle={{
+										backgroundColor: 'white',
+										fontSize: '12px',
+										padding: '5px',
+										minWidth: '80px',
+										textAlign: 'center',
+										borderRadius: '5px',
+										border: '1px solid #ccc',
+										zIndex: '99999',
+										transform: 'translateX(-50%)',
+									}}
+									icon={{
+										url: [chiken, bread][Math.floor(Math.random() * 2)],
+									}}
+								>
+									<div>{v.name}</div>
+								</MarkerWithLabel>
+							);
+						})}
+				</MarkerClusterer>
 			</GoogleMap>
 		);
 	}),
@@ -137,7 +171,7 @@ function Maps(props) {
 		<CustomSkinMap
 			googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBVhZH8Q5rxjZKnGAQKvrkm3Kb18xuKkI"
 			loadingElement={<div style={{ height: `100%` }} />}
-			containerElement={<div style={{ height: `calc(100vh - 70px)` }} />}
+			containerElement={<div style={{ height: `calc(100vh - 54px)` }} />}
 			mapElement={<div style={{ height: `100%` }} />}
 			props={props}
 		/>
@@ -147,7 +181,7 @@ function Maps(props) {
 export default connect(
 	state => ({
 		isLoading: state.store.isLoading,
-		storeMapList: state.store.storeMapList.data,
+		storeMapList: state.store.storeMapList.data.stores,
 	}),
 	{
 		requestStoreMapList: actionCreators.requestStoreMapList,
