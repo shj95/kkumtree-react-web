@@ -29,6 +29,7 @@ import DashboardPage from 'views/Dashboard/Dashboard.js';
 import UserProfile from 'views/UserProfile/UserProfile.js';
 import TableList from 'views/TableList/TableList.js';
 import Typography from 'views/Typography/Typography.js';
+import Privacy from 'views/Privacy/Privacy.js';
 import Icons from 'views/Icons/Icons.js';
 import Maps from 'views/Maps/Maps.js';
 import Store from 'views/Maps/Store.js';
@@ -79,8 +80,16 @@ const dashboardRoutes = [
 		layout: '/admin',
 	},
 	{
+		path: '/privacy',
+		name: '개인정보처리방침',
+		rtlName: 'خرائط',
+		icon: LocationOn,
+		component: Privacy,
+		layout: '/admin',
+	},
+	{
 		path: '/maps',
-		name: '꿈트리 맵',
+		name: '꿈틀이 맵',
 		rtlName: 'خرائط',
 		icon: LocationOn,
 		component: Maps,

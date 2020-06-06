@@ -23,7 +23,8 @@ const useStyles = makeStyles(styles);
 export default function Header(props) {
 	const classes = useStyles();
 	function makeBrand() {
-		if (window.location.href.includes('/maps')) return '꿈트리 맵';
+		if (window.location.href.includes('/maps')) return '꿈틀이 맵';
+		else if (window.location.href.includes('/privacy')) return '개인정보처리방침';
 		else return '가게 상세';
 	}
 	const { color } = props;
