@@ -103,7 +103,31 @@ export default handleActions(
 		[DETAIL.FAILED]: (state, action) =>
 			produce(state, draftState => {
 				draftState.isLoading = false;
-				draftState.storeDetail.data = null;
+				// draftState.storeDetail.data = null;
+				// TODO : API 나오면 제거
+				draftState.storeDetail.data.store = {
+					id: 1,
+					name: '엽떡',
+					address: '서울시 무슨구 무슨동 123-12',
+					telNumber: '02-123-4567',
+					latitude: 37.0,
+					longitude: 127.0,
+					category: 'BAKERY',
+					menus: [
+						{
+							id: 1,
+							name: '떡볶이',
+							price: 6000,
+						},
+					],
+					benefits: [
+						{
+							id: 1,
+							name: '떡 추가',
+							description: '떡을 더 줌',
+						},
+					],
+				};
 			}),
 	},
 	initState,
@@ -118,9 +142,9 @@ function* getStoresByLatLng({ payload: { lat, lng } }) {
 	}
 }
 
-function* getStoreById({ payload: { id } }) {
+function* getStoreById({ payload: id }) {
 	try {
-		const action = yield call(api.getStoreById, { id });
+		const action = yield call(api.getStoreById, id);
 		yield put(actionCreators.handleStoreDetailSuccess(action));
 	} catch (err) {
 		yield put(actionCreators.handleStoreDetailFailure());

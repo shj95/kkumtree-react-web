@@ -58,7 +58,6 @@ const CustomSkinMap = withScriptjs(
 			const newPos = mapRef.current.getCenter().toJSON();
 			props.requestStoreMapList({ lat: newPos.lat, lng: newPos.lng });
 		}
-
 		return isLoading ? (
 			<div>
 				<SyncLoader
@@ -77,6 +76,10 @@ const CustomSkinMap = withScriptjs(
 				defaultOptions={{
 					scrollwheel: false,
 					zoomControl: true,
+					fullscreenControl: false,
+					mapTypeControl: false,
+					rotateControl: true,
+					minZoom: 10,
 					styles: [
 						{
 							featureType: 'water',
@@ -151,8 +154,10 @@ const CustomSkinMap = withScriptjs(
 										transform: 'translateX(-50%)',
 									}}
 									icon={{
+										// TODO : 이미지 매핑
 										url: [chiken, bread][Math.floor(Math.random() * 2)],
 									}}
+									onClick={() => props.history.push(`/admin/store/${v.id}`)}
 								>
 									<div>{v.name}</div>
 								</MarkerWithLabel>

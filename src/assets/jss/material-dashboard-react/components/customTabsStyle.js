@@ -50,7 +50,7 @@ const customTabsStyle = {
 		maxWidth: 'unset !important',
 		maxHeight: 'unset !important',
 		fontWeight: '500',
-		fontSize: '12px',
+		fontSize: '14px',
 		marginTop: '1px',
 		'& > svg,& > .material-icons': {
 			verticalAlign: 'middle',

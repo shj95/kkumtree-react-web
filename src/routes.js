@@ -31,6 +31,7 @@ import TableList from 'views/TableList/TableList.js';
 import Typography from 'views/Typography/Typography.js';
 import Icons from 'views/Icons/Icons.js';
 import Maps from 'views/Maps/Maps.js';
+import Store from 'views/Maps/Store.js';
 import NotificationsPage from 'views/Notifications/Notifications.js';
 import UpgradeToPro from 'views/UpgradeToPro/UpgradeToPro.js';
 // core components/views for RTL layout
@@ -83,6 +84,14 @@ const dashboardRoutes = [
 		rtlName: 'خرائط',
 		icon: LocationOn,
 		component: Maps,
+		layout: '/admin',
+	},
+	{
+		path: '/store/:id(\\d+)',
+		name: '가게 정보',
+		rtlName: 'خرائط',
+		icon: LocationOn,
+		component: Store,
 		layout: '/admin',
 	},
 	{

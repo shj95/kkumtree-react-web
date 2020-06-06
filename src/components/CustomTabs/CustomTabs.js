@@ -30,8 +30,8 @@ export default function CustomTabs(props) {
 	});
 	return (
 		<Card plain={plainTabs}>
-			<CardHeader color={headerColor} plain={plainTabs}>
-				{title !== undefined ? <div className={cardTitle}>{title}</div> : null}
+			<CardHeader color={headerColor} plain={plainTabs} style={{ paddingTop: 5, paddingBottom: 5 }}>
+				{title !== undefined ? <h4 className={cardTitle}>{title}</h4> : null}
 				<Tabs
 					value={value}
 					onChange={handleChange}

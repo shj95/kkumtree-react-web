@@ -58,7 +58,7 @@ export default function Dashboard() {
 								<Danger>
 									<Warning />
 								</Danger>
-								<a href="#pablo" onClick={(e) => e.preventDefault()}>
+								<a href="#pablo" onClick={e => e.preventDefault()}>
 									Get more space
 								</a>
 							</div>
