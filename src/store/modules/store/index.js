@@ -7,23 +7,18 @@ import { LIST_MAP, DETAIL, actionCreators } from './actions';
 
 const initState = {
 	isLoading: false,
-	storeMapList: {
-		message: '',
-		data: {
-			stores: [
-				{
-					id: 0,
-					name: '',
-					address: '',
-					telNumber: '',
-					latitude: 0,
-					longitude: 0,
-					category: '',
-					categoryImgUrl: '',
-				},
-			],
+	storeMapList: [
+		{
+			id: 0,
+			name: '',
+			address: '',
+			telNumber: '',
+			latitude: 0,
+			longitude: 0,
+			category: '',
+			categoryImgUrl: '',
 		},
-	},
+	],
 	storeDetail: {
 		message: '',
 		data: {
@@ -56,10 +51,6 @@ const initState = {
 	},
 };
 
-function getRandomArbitrary(min, max) {
-	return Math.random() * (max - min) + min;
-}
-
 export default handleActions(
 	{
 		[LIST_MAP.REQUESTED]: (state, action) =>
@@ -69,27 +60,12 @@ export default handleActions(
 		[LIST_MAP.SUCCEEDED]: (state, action) =>
 			produce(state, draftState => {
 				draftState.isLoading = false;
-				draftState.storeMapList = action.payload.data.stores;
+				draftState.storeMapList = action.payload.data.data.stores;
 			}),
 		[LIST_MAP.FAILED]: (state, action) =>
 			produce(state, draftState => {
 				draftState.isLoading = false;
-				// draftState.storeMapList.data = [];
-				// TODO : API 나오면 제거
-				draftState.storeMapList.data.stores = [...Array(20).keys()].map(v => {
-					return {
-						id: v,
-						name: ['엽떡', '김밥천국', '곱창나라', '콩시콩뼈 감자탕', '돈냉', '맛있는 음식점'][
-							Math.floor(Math.random() * 6)
-						],
-						address: '서울시 무슨구 무슨동 123-12',
-						telNumber: '02-123-4567',
-						latitude: action.payload.lat + getRandomArbitrary(-0.01, 0.01),
-						longitude: action.payload.lng + getRandomArbitrary(-0.01, 0.01),
-						category: 'BAKERY',
-						categoryImgUrl: 'http://image.url',
-					};
-				});
+				draftState.storeMapList = [];
 			}),
 		[DETAIL.REQUESTED]: (state, action) =>
 			produce(state, draftState => {
@@ -98,44 +74,21 @@ export default handleActions(
 		[DETAIL.SUCCEEDED]: (state, action) =>
 			produce(state, draftState => {
 				draftState.isLoading = false;
-				draftState.storeDetail = action.payload.data.stores;
+				console.log(action.payload.data.data.store);
+				draftState.storeDetail = action.payload.data.data.store;
 			}),
 		[DETAIL.FAILED]: (state, action) =>
 			produce(state, draftState => {
 				draftState.isLoading = false;
-				// draftState.storeDetail.data = null;
-				// TODO : API 나오면 제거
-				draftState.storeDetail.data.store = {
-					id: 1,
-					name: '엽떡',
-					address: '서울시 무슨구 무슨동 123-12',
-					telNumber: '02-123-4567',
-					latitude: 37.0,
-					longitude: 127.0,
-					category: 'BAKERY',
-					menus: [
-						{
-							id: 1,
-							name: '떡볶이',
-							price: 6000,
-						},
-					],
-					benefits: [
-						{
-							id: 1,
-							name: '떡 추가',
-							description: '떡을 더 줌',
-						},
-					],
-				};
+				draftState.storeDetail.data = null;
 			}),
 	},
 	initState,
 );
 
-function* getStoresByLatLng({ payload: { lat, lng } }) {
+function* getStoresByLatLng({ payload: { lat, lng, diameter } }) {
 	try {
-		const action = yield call(api.getStoresByLatLng, { lat, lng });
+		const action = yield call(api.getStoresByLatLng, { lat, lng, diameter });
 		yield put(actionCreators.handleStoreMapListSuccess(action));
 	} catch (err) {
 		yield put(actionCreators.handleStoreMapListFailure({ lat, lng }));

@@ -16,6 +16,7 @@ const CustomSkinMap = withScriptjs(
 	withGoogleMap(({ props }) => {
 		const [LatLng, setLatLng] = useState({ lat: 37.5305195, lng: 126.9634576 }); // 기본 좌표 : 용산역
 		const [isLoading, setIsLoading] = useState(false);
+		const [diameter, setDiameter] = useState((40000 / Math.pow(2, 15)) * 2 * 1000);
 		const mapRef = useRef(null);
 		useEffect(() => {
 			setIsLoading(true);
@@ -45,6 +46,9 @@ const CustomSkinMap = withScriptjs(
 							setIsLoading(false);
 						}, 500);
 					},
+					{
+						timeout: 5000,
+					},
 				);
 			}
 		}, []);
@@ -56,7 +60,13 @@ const CustomSkinMap = withScriptjs(
 		function handleDragEnded() {
 			if (!mapRef.current) return;
 			const newPos = mapRef.current.getCenter().toJSON();
-			props.requestStoreMapList({ lat: newPos.lat, lng: newPos.lng });
+			props.requestStoreMapList({ lat: newPos.lat, lng: newPos.lng, diameter: diameter });
+		}
+
+		function onZoomChanged() {
+			if (!mapRef.current) return;
+			setDiameter((40000 / Math.pow(2, mapRef.current.getZoom())) * 2 * 1000);
+			props.requestStoreMapList({ lat: newPos.lat, lng: newPos.lng, diameter: diameter });
 		}
 		return isLoading ? (
 			<div>
@@ -73,6 +83,7 @@ const CustomSkinMap = withScriptjs(
 				defaultZoom={15}
 				center={LatLng}
 				onDragEnd={handleDragEnded}
+				onZoomChanged={onZoomChanged}
 				defaultOptions={{
 					scrollwheel: false,
 					zoomControl: true,
@@ -134,13 +145,13 @@ const CustomSkinMap = withScriptjs(
 					],
 				}}
 			>
-				<MarkerClusterer averageCenter enableRetinaIcons gridSize={50}>
+				<MarkerClusterer averageCenter enableRetinaIcons gridSize={25}>
 					{props.storeMapList &&
 						props.storeMapList.map(v => {
 							return (
 								<MarkerWithLabel
 									key={v.id}
-									position={{ lat: v.latitude, lng: v.longitude }}
+									position={{ lat: v.longitude, lng: v.latitude }}
 									labelAnchor={new google.maps.Point(0, 0)}
 									labelStyle={{
 										backgroundColor: 'white',
@@ -153,10 +164,15 @@ const CustomSkinMap = withScriptjs(
 										zIndex: '99999',
 										transform: 'translateX(-50%)',
 									}}
-									icon={{
-										// TODO : 이미지 매핑
-										url: [chiken, bread][Math.floor(Math.random() * 2)],
-									}}
+									icon={
+										new google.maps.MarkerImage(
+											v.categoryImgUrl,
+											null,
+											null,
+											null,
+											new google.maps.Size(50, 50),
+										)
+									}
 									onClick={() => props.history.push(`/admin/store/${v.id}`)}
 								>
 									<div>{v.name}</div>
@@ -184,7 +200,7 @@ function Maps(props) {
 export default connect(
 	state => ({
 		isLoading: state.store.isLoading,
-		storeMapList: state.store.storeMapList.data.stores,
+		storeMapList: state.store.storeMapList,
 	}),
 	{
 		requestStoreMapList: actionCreators.requestStoreMapList,

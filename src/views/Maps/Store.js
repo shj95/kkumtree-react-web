@@ -25,19 +25,18 @@ import { actionCreators } from '../../store/modules/store/actions';
 const styles = {
 	typo: {
 		paddingLeft: '25%',
-		marginBottom: '40px',
+		marginTop: '20px',
+		marginBottom: '20px',
 		position: 'relative',
 	},
 	note: {
 		fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-		bottom: '10px',
 		color: '#c0c1c2',
 		display: 'block',
 		fontWeight: '400',
 		fontSize: '13px',
-		lineHeight: '13px',
 		left: '0',
-		marginLeft: '20px',
+		marginLeft: '10px',
 		position: 'absolute',
 		width: '260px',
 	},
@@ -61,20 +60,12 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-function makeKoreanCategoryName(categoryName) {
-	// TODO : 매핑 추가
-	switch (categoryName) {
-		case 'BAKERY':
-			return '빵';
-	}
-}
-
 const CustomSkinMap = withScriptjs(
 	withGoogleMap(({ props }) => {
 		return props.storeDetail ? (
 			<GoogleMap
 				defaultZoom={15}
-				center={{ lat: props.storeDetail.latitude, lng: props.storeDetail.longitude }}
+				center={{ lat: props.storeDetail.longitude, lng: props.storeDetail.latitude }}
 				defaultOptions={{
 					scrollwheel: false,
 					zoomControl: true,
@@ -136,7 +127,7 @@ const CustomSkinMap = withScriptjs(
 				}}
 			>
 				<MarkerWithLabel
-					position={{ lat: props.storeDetail.latitude, lng: props.storeDetail.longitude }}
+					position={{ lat: props.storeDetail.longitude, lng: props.storeDetail.latitude }}
 					labelAnchor={new google.maps.Point(0, 0)}
 					labelStyle={{
 						backgroundColor: 'white',
@@ -149,10 +140,15 @@ const CustomSkinMap = withScriptjs(
 						zIndex: '99999',
 						transform: 'translateX(-50%)',
 					}}
-					icon={{
-						// TODO : 이미지 매핑
-						url: [chiken, bread][Math.floor(Math.random() * 2)],
-					}}
+					icon={
+						new google.maps.MarkerImage(
+							props.storeDetail.categoryImgUrl,
+							null,
+							null,
+							null,
+							new google.maps.Size(50, 50),
+						)
+					}
 				>
 					<div>{props.storeDetail.name}</div>
 				</MarkerWithLabel>
@@ -176,57 +172,33 @@ function Store(props) {
 			/>
 		</div>
 	) : (
-		<Card style={{ marginTop: 80 }}>
+		<Card style={{ marginTop: 80, height: '100%' }}>
 			<CardHeader color="info">
-				<h4 className={classes.cardTitleWhite}>
-					{props.storeDetail.name + '  /  ' + makeKoreanCategoryName(props.storeDetail.category)}
-				</h4>
-				<p className={classes.cardCategoryWhite}>{props.storeDetail.telNumber}</p>
-				<p className={classes.cardCategoryWhite}>{props.storeDetail.address}</p>
+				<h4 className={classes.cardTitleWhite}>{props.storeDetail.name}</h4>
 			</CardHeader>
 			<CardBody>
 				<CustomSkinMap
 					googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBVhZH8Q5rxjZKnGAQKvrkm3Kb18xuKkI"
 					loadingElement={<div style={{ height: `100%` }} />}
-					containerElement={<div style={{ height: `30vh` }} />}
+					containerElement={
+						<div style={{ height: `30vh`, marginLeft: '-20px', marginRight: '-20px' }} />
+					}
 					mapElement={<div style={{ height: `30vh` }} />}
 					props={props}
 				></CustomSkinMap>
-				<GridContainer>
-					<GridItem xs={12}>
-						<CustomTabs
-							headerColor="info"
-							tabs={[
-								{
-									tabName: '메뉴',
-									// tabIcon: BugReport,
-									tabContent: (
-										<Table
-											tableHeaderColor="primary"
-											tableHead={['메뉴', '가격']}
-											tableData={props.storeDetail.menus.map(v => {
-												return [v.name, `${v.price.toLocaleString()} 원`];
-											})}
-										/>
-									),
-								},
-								{
-									tabName: '혜택',
-									// tabIcon: Code,
-									tabContent: (
-										<Table
-											tableHeaderColor="primary"
-											tableHead={['혜택', '설명']}
-											tableData={props.storeDetail.benefits.map(v => {
-												return [v.name, v.description];
-											})}
-										/>
-									),
-								},
-							]}
-						/>
-					</GridItem>
-				</GridContainer>
+
+				<div className={classes.typo}>
+					<div className={classes.note}>주소</div>
+					<h6 style={{ margin: 0 }}>{props.storeDetail.address}</h6>
+				</div>
+				<div className={classes.typo}>
+					<div className={classes.note}>카테고리</div>
+					<h6 style={{ margin: 0 }}>{props.storeDetail.category}</h6>
+				</div>
+				<div className={classes.typo}>
+					<div className={classes.note}>전화번호</div>
+					<h6 style={{ margin: 0 }}>{props.storeDetail.telNumber}</h6>
+				</div>
 			</CardBody>
 		</Card>
 	);
@@ -235,7 +207,7 @@ function Store(props) {
 export default connect(
 	state => ({
 		isLoading: state.store.isLoading,
-		storeDetail: state.store.storeDetail.data.store,
+		storeDetail: state.store.storeDetail,
 	}),
 	{
 		requestStoreDetail: actionCreators.requestStoreDetail,
