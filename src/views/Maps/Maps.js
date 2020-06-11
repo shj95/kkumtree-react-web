@@ -30,6 +30,7 @@ const CustomSkinMap = withScriptjs(
 						props.requestStoreMapList({
 							lat: position.coords.latitude,
 							lng: position.coords.longitude,
+							diameter,
 						});
 						setTimeout(() => {
 							setIsLoading(false);
@@ -65,6 +66,7 @@ const CustomSkinMap = withScriptjs(
 
 		function onZoomChanged() {
 			if (!mapRef.current) return;
+			const newPos = mapRef.current.getCenter().toJSON();
 			setDiameter((40000 / Math.pow(2, mapRef.current.getZoom())) * 2 * 1000);
 			props.requestStoreMapList({ lat: newPos.lat, lng: newPos.lng, diameter: diameter });
 		}
