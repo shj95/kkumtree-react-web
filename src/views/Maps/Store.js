@@ -163,7 +163,7 @@ function Store(props) {
 	}, []);
 	const classes = useStyles();
 	return props.isLoading || !props.storeDetail ? (
-		<div>
+		<div style={{ height: '80vh' }}>
 			<SyncLoader
 				loading={true}
 				size="20px"
