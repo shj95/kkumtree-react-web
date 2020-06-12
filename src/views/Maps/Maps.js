@@ -147,7 +147,7 @@ const CustomSkinMap = withScriptjs(
 					],
 				}}
 			>
-				<MarkerClusterer averageCenter enableRetinaIcons gridSize={25}>
+				<MarkerClusterer averageCenter enableRetinaIcons gridSize={30}>
 					{props.storeMapList &&
 						props.storeMapList.map(v => {
 							return (
